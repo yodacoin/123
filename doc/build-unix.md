@@ -12,9 +12,9 @@ To Build
 ---------------------
 
 	cd src/
-	make -f makefile.unix		# Headless litecoin
+	make -f makefile.unix		# Headless bitcoin
 
-See readme-qt.rst for instructions on building Litecoin-Qt, the graphical user interface.
+See readme-qt.rst for instructions on building Bitcoin-Qt, the graphical user interface.
 
 Dependencies
 ---------------------
@@ -79,6 +79,21 @@ Optional:
 	sudo apt-get install libminiupnpc-dev (see USE_UPNP compile flag)
 
 
+Dependency Build Instructions: Gentoo
+-------------------------------------
+
+Note: If you just want to install bitcoind on Gentoo, you can add the Bitcoin overlay and use your package manager:
+
+	layman -a bitcoin && emerge bitcoind
+	emerge -av1 --noreplace boost glib openssl sys-libs/db:4.8
+
+Take the following steps to build (no UPnP support):
+
+	cd ${BITCOIN_DIR}/src
+	make -f makefile.unix USE_UPNP= USE_IPV6=1 BDB_INCLUDE_PATH='/usr/include/db4.8'
+	strip bitcoind
+
+
 Notes
 -----
 The release is built with GCC and then "strip bitcoind" to strip the debug
@@ -113,7 +128,7 @@ If you need to build Boost yourself:
 
 Security
 --------
-To help make your litecoin installation more secure by making certain attacks impossible to
+To help make your bitcoin installation more secure by making certain attacks impossible to
 exploit even if a vulnerability is found, you can take the following measures:
 
 * Position Independent Executable
@@ -127,11 +142,12 @@ exploit even if a vulnerability is found, you can take the following measures:
     such as: "relocation R_X86_64_32 against `......' can not be used when making a shared object;"
 
     To build with PIE, use:
-    make -f makefile.unix ... -e PIE=1
+
+    	make -f makefile.unix ... -e PIE=1
 
     To test that you have built PIE executable, install scanelf, part of paxutils, and use:
 
-    	scanelf -e ./litecoin
+    	scanelf -e ./bitcoin
 
     The output should contain:
      TYPE
@@ -145,7 +161,7 @@ exploit even if a vulnerability is found, you can take the following measures:
     executable without the non-executable stack protection.
 
     To verify that the stack is non-executable after compiling use:
-    `scanelf -e ./litecoin`
+    `scanelf -e ./bitcoin`
 
     the output should contain:
 	STK/REL/PTL

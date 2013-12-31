@@ -69,23 +69,24 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_serialize_with_tweak)
 
 BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
 {
-    string strSecret = string("6v7hgtX6r7frdh7XDRJ3L4JRLMAn9chCgNgSccwqWdp69XfPdX6");
+    string strSecret = string("5Kg1gnAjaLfKiwhhPpGS3QfRg2m6awQvaj98JCZBZQ5SuS2F15C");
     CBitcoinSecret vchSecret;
     BOOST_CHECK(vchSecret.SetString(strSecret));
 
-    CKey key = vchSecret.GetKey();
-    CPubKey pubkey = key.GetPubKey();
-    vector<unsigned char> vchPubKey(pubkey.begin(), pubkey.end());
+    CKey key;
+    bool fCompressed;
+    CSecret secret = vchSecret.GetSecret(fCompressed);
+    key.SetSecret(secret, fCompressed);
 
     CBloomFilter filter(2, 0.001, 0, BLOOM_UPDATE_ALL);
-    filter.insert(vchPubKey);
-    uint160 hash = pubkey.GetID();
+    filter.insert(key.GetPubKey().Raw());
+    uint160 hash = key.GetPubKey().GetID();
     filter.insert(vector<unsigned char>(hash.begin(), hash.end()));
 
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     filter.Serialize(stream, SER_NETWORK, PROTOCOL_VERSION);
 
-    vector<unsigned char> vch = ParseHex("0322ed23080000000000000001");
+    vector<unsigned char> vch = ParseHex("038fc16b080000000000000001");
     vector<char> expected(vch.size());
 
     for (unsigned int i = 0; i < vch.size(); i++)

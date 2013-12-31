@@ -13,14 +13,12 @@ class BitcoinGUI;
 class ClientModel;
 class WalletModel;
 class WalletStack;
-class WalletView;
 
 class WalletFrame : public QFrame
 {
     Q_OBJECT
-
 public:
-    explicit WalletFrame(BitcoinGUI *_gui = 0);
+    explicit WalletFrame(BitcoinGUI *_gui);
     ~WalletFrame();
 
     void setClientModel(ClientModel *clientModel);
@@ -38,8 +36,6 @@ private:
     BitcoinGUI *gui;
     ClientModel *clientModel;
     WalletStack *walletStack;
-
-    WalletView *currentWalletView();
 
 public slots:
     /** Switch to overview (home) page */
